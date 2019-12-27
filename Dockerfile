@@ -23,8 +23,25 @@ RUN \
   mkdir -p /var/empty && \
   ldconfig
 
+ADD unixsocket.patch /tmp/opa.patch
+
+RUN \
+  git clone https://github.com/open-policy-agent/contrib && \
+  apt-get install -y libjansson-dev libcurl4-gnutls-dev file patch && \
+  cd contrib/pam_authz/pam/ && \
+  patch -p3 < /tmp/opa.patch && \
+  rm -f /usr/lib/x86_64-linux-gnu/libjansson.a && \
+  sed -i 's/shared/shared -lpam/' Makefile && \
+  make MODULE=pam_opa clean && \
+  make MODULE=pam_opa && \
+  ls -l pam_opa.so && \
+  file pam_opa.so && \
+  ldd pam_opa.so && \
+  cp -a pam_opa.so /lib/x86_64-linux-gnu/security/pam_opa.so
+
 ADD sshd_config /usr/local/etc/
 ADD start.sh /start.sh
+ADD sshd /etc/pam.d/sshd
 
 ENV SSH_SK_PROVIDER=/usr/local/lib/libsk-libfido2.so
-CMD ["/start.sh"]
+entrypoint ["/usr/local/bin/ssh"]

@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -p 1022:22 --privileged -v /tmp/sshstate:/etc/sshstate -v /dev:/dev -v /sys:/sys -it --rm docker.pkg.github.com/kfox1111/u2f-sshd/u2f-sshd:latest

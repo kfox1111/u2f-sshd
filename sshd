@@ -1,0 +1,8 @@
+#auth   [success=1 default=ignore]      pam_unix.so nullok_secure
+auth    sufficient                      pam_opa.so sock=/sock/opa/opa.sock url=http://localhost:81 authz_endpoint=/v1/data/sshd/authz display_endpoint=/v1/data/display pull_endpoint=/v1/data/pull log_level=debug
+auth    requisite                       pam_deny.so
+auth    required                        pam_permit.so
+#@include common-auth
+@include common-account
+@include common-password
+@include common-session

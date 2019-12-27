@@ -1,2 +1,8 @@
 #!/bin/bash
-docker run -p 1022:22 --privileged -v /tmp/sshstate:/etc/sshstate -v /dev:/dev -v /sys:/sys -it --rm u2f-sshd
+#FIXME this is not the best way to do this. /tmp/opasock is not very secure. This is just a demo.
+#docker run -d -p 1081:81 -p 1022:22 --privileged -v $(pwd)/examplestate:/etc/sshstate -v $(pwd)/sock:/sock -v /dev:/dev -v /sys:/sys --name u2f-sshd u2f-sshd
+OPASOCK=/tmp/opasock
+docker run -it --rm -v $OPASOCK:/sock ubuntu /bin/bash -cx 'mkdir -p /sock/opa/; chown root.root /sock/opa; chmod 700 /sock/opa'
+docker run -d -p 1022:22 --privileged -v $OPASOCK:/sock -v /dev:/dev -v /sys:/sys --name u2f-sshd --entrypoint /start.sh u2f-ssh
+docker run -d --network=container:u2f-sshd -v $OPASOCK:/sock -v $(pwd)/rego:/rego --name opa openpolicyagent/opa:latest run --server --log-level=debug /rego/display.rego /rego/pull.rego /rego/ssh_authz.rego --addr unix://sock/opa/opa.sock
+

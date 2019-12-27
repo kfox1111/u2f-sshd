@@ -13,4 +13,4 @@ echo "adduser <username>"
 echo To enable auth:
 echo "cat ~/.ssh/id_ecdsa_sk.pub > /etc/sshstate/authorized_keys/<username>"
 echo Starting sshd.
-/usr/local/sbin/sshd -D
+/usr/local/sbin/sshd -D -E /var/log/ssh_debug

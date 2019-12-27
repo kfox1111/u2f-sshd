@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t u2f-sshd .
+docker build -t u2f-ssh .

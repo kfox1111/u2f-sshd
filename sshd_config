@@ -3,9 +3,7 @@ SyslogFacility AUTHPRIV
 AllowTcpForwarding yes
 AuthorizedKeysFile	/etc/sshstate/authorized_keys/%u
 PasswordAuthentication no
-ChallengeResponseAuthentication no
-#GSSAPIAuthentication yes
-#GSSAPICleanupCredentials no
+ChallengeResponseAuthentication yes
 PermitRootLogin no
 UsePAM yes
 X11Forwarding no
@@ -14,4 +12,5 @@ AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
 AcceptEnv XMODIFIERS
 HostKey /etc/sshstate/ssh_host_ecdsa_key
+AuthenticationMethods publickey,keyboard-interactive
 #AuthorizedKeysCommand
